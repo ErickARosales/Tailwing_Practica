@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Moderno</title>
+    <!-- Importar tipografía Inter de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Script de Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Script de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Aplicar la fuente Inter a todo el cuerpo */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased p-6 sm:p-10">
+
+    <div class="max-w-7xl mx-auto space-y-8">
+
+   
+        <header class="flex justify-between items-start">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white">Dashboard Principal</h1>
+                <p class="text-sm text-slate-400 mt-1">Bienvenido de nuevo, admin</p>
+            </div>
+            <!-- Botón de descarga -->
+            <button class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm font-medium cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Exportar
+            </button>
+        </header>
+
+   
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+          
+            <div class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700/60 flex flex-col justify-between">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-slate-400">Usuarios Totales</span>
+                    <span class="text-xs font-semibold bg-teal-500/10 text-teal-400 px-2.5 py-1 rounded-full">+12%</span>
+                </div>
+                <div class="mt-4">
+                    <h2 class="text-3xl font-bold text-white">8,249</h2>
+                    <p class="text-xs text-slate-400 mt-1.5">Aumentó 1,093 esta semana</p>
+                </div>
+            </div>
+
+         
+            <div class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700/60 flex flex-col justify-between">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-slate-400">Ingresos</span>
+                    <span class="text-xs font-semibold bg-teal-500/10 text-teal-400 px-2.5 py-1 rounded-full">+8%</span>
+                </div>
+                <div class="mt-4">
+                    <h2 class="text-3xl font-bold text-white">$24,780</h2>
+                    <p class="text-xs text-slate-400 mt-1.5">$2,567 más que el mes pasado</p>
+                </div>
+            </div>
+
+            
+            <div class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700/60 flex flex-col justify-between">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-slate-400">Sesiones Activas</span>
+                    <span class="text-xs font-semibold bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full">-3%</span>
+                </div>
+                <div class="mt-4">
+                    <h2 class="text-3xl font-bold text-white">1,342</h2>
+                    <p class="text-xs text-slate-400 mt-1.5">42 menos que ayer</p>
+                </div>
+            </div>
+
+           
+            <div class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700/60 flex flex-col justify-between">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-slate-400">Tasa de Conversión</span>
+                    <span class="text-xs font-semibold bg-teal-500/10 text-teal-400 px-2.5 py-1 rounded-full">+5%</span>
+                </div>
+                <div class="mt-4">
+                    <h2 class="text-3xl font-bold text-white">24.8%</h2>
+                    <p class="text-xs text-slate-400 mt-1.5">1.2% más que el promedio</p>
+                </div>
+            </div>
+
+        </section>
+
+        
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Gráfica 1: Crecimiento de Usuarios -->
+            <div class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700/60">
+                <h3 class="text-lg font-semibold text-white mb-4">Crecimiento de Usuarios</h3>
+                <div class="relative h-80 w-full">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+            
+            <div class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700/60">
+                <h3 class="text-lg font-semibold text-white mb-4">Ingresos Mensuales</h3>
+                <div class="relative h-80 w-full">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+  
+    <script>
+        
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = '#334155';
+
+        // Gráfica de línea
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Usuarios 2024',
+                    data: [5000, 5500, 6000, 6200, 6800, 7200, 7500, 8000, 8249, 8500, 8800, 9100],
+                    borderColor: '#14b8a6', // Teal
+                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                    tension: 0.35,
+                    fill: true
+                }, {
+                    label: 'Usuarios 2023',
+                    data: [4000, 4200, 4500, 4800, 5100, 5400, 5600, 5900, 6200, 6500, 6800, 7000],
+                    borderColor: '#64748b', // Slate gris
+                    backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                    tension: 0.35,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Gráfica de barras
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Ingresos 2024 ($)',
+                    data: [15000, 16500, 18000, 19500, 21000, 22500, 23000, 24000, 24780, 26000, 27500, 29000],
+                    backgroundColor: '#0ea5e9' // Azul brillante
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
